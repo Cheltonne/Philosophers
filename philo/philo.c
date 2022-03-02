@@ -6,13 +6,13 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:40:57 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/01 17:57:46 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/02 19:30:56 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long int	actual_time(void)
+long int	ms_timeofday(void)
 {
 	long int		time;
 	struct timeval	current_time;

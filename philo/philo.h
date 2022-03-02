@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/01 17:34:23 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/02 20:23:16 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,31 @@
 # include <sys/time.h>
 # include <pthread.h>
 
+typedef struct	s_shared
+{
+	char			**av;
+	int				ac;
+	int				total_ph;
+	int				ttd;
+	int				tte;
+	int				tts;
+	int				m_e;
+	t_philo			**ph;
+	pthread_mutex	write_m;
+}				t_shared;
+
 typedef struct	s_philo
 {
 	pthread_t		t_id;
 	int				id;
 	pthread_mutex_t	l_f;
 	pthread_mutex_t	*r_f;
+	t_share			*shared;
 }				t_philo;
 
-typedef struct	s_data
-{
-	char	**av;
-	int		ac;
-	int		total_ph;
-	int		ttd;
-	int		tte;
-	int		tts;
-	int		m_e;
-	t_philo	**ph;
-}				t_data;
-
 void		*routine(void* param);
-long int	actual_time(void);
+void		sleep_think(t_philo *ph);
+long int	ms_timeofday(void);
 void		init_data(t_data *data, int ac, char **av);
 long long	ft_atoi(const char *str);
 void		init_ph(t_data *data);
