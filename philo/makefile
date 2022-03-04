@@ -8,6 +8,7 @@ RM = rm -f
 FILES = philo \
 	     init \
 	     helpers \
+		 time_fcts
 
 SRCS =	$(addsuffix .c, $(FILES))
 

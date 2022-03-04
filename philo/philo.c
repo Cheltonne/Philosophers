@@ -6,41 +6,43 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:40:57 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/04 14:48:37 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/04 18:51:04 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long int	ms_timeofday(void)
-{
-	long int		time;
-	struct timeval	current_time;
-
-	time = 0;
-	if (gettimeofday(&current_time, NULL) == -1)
-		return(0);
-	time = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
-	return (time);
-}
-
 void	*routine(void *param)
 {
-	if ()
-	printf("Philosopher is sleeping\n");
+	t_philo	*philo;
+
+	philo = param;
+	if (philo->id % 2 == 0)
+		usleep(0.5);
+	pthread_mutex_lock(&philo->shared->write_m);
+	pthread_mutex_lock(&philo->l_f);
+	print_status("has taken a fork", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
+	pthread_mutex_lock(&philo->shared->write_m);
+	pthread_mutex_lock(philo->r_f);
+	print_status("has taken a fork", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
+	pthread_mutex_unlock(philo->r_f);
+	pthread_mutex_unlock(&philo->l_f);
+	pthread_mutex_lock(&philo->shared->write_m);
+	print_status("is thinking", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
 	return (param);
 }
 
-/*void	pthread_wait(t_shared *data)
-{
-	printf("Philosopher is thinking\n");
-	pthread_join()
-}*/
-
 int	main(int ac, char **av)
 {
-	t_shared			data;
+	t_shared	*data;
 
-	init_shared(&data, ac, av);
-	init_ph(&data);
+	data = malloc(sizeof(t_shared));
+	if (data == NULL)
+		return (0);
+	init_shared(data, ac, av);
+	init_ph(data);
+	free(data);
 }
