@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-t_philo *add_philo(t_data *data, int id)
+t_philo *add_philo(t_shared *data, int id)
 {
 	t_philo	*ret;
 
@@ -29,7 +29,7 @@ t_philo *add_philo(t_data *data, int id)
 	return (ret);
 }
 
-void	init_ph(t_data *data)
+void	init_ph(t_shared *data)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ void	init_ph(t_data *data)
 	}
 }
 
-void	init_data(t_data *data, int ac, char **av)
+void	init_shared(t_shared *data, int ac, char **av)
 {
 	data->av = av;
 	data->ac = ac;

@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/02 20:23:16 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/04 14:37:39 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,13 @@ typedef struct	s_shared
 	int				tts;
 	int				m_e;
 	t_philo			**ph;
-	pthread_mutex	write_m;
+	pthread_mutex_t	write_m;
 }				t_shared;
+
+typedef	struct	s_bouche_trou
+{
+	t_philo	**ph;
+}				t_bouche_trou;
 
 typedef struct	s_philo
 {
@@ -37,15 +42,15 @@ typedef struct	s_philo
 	int				id;
 	pthread_mutex_t	l_f;
 	pthread_mutex_t	*r_f;
-	t_share			*shared;
+	t_shared		*shared;
 }				t_philo;
 
 void		*routine(void* param);
 void		sleep_think(t_philo *ph);
 long int	ms_timeofday(void);
-void		init_data(t_data *data, int ac, char **av);
+void		init_shared(t_shared *data, int ac, char **av);
 long long	ft_atoi(const char *str);
-void		init_ph(t_data *data);
-t_philo		*add_philo(t_data *data, int id);
+void		init_ph(t_shared *data);
+t_philo		*add_philo(t_shared *data, int id);
 
 #endif
