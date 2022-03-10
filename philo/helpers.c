@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:51:25 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/01 16:52:25 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/08 17:18:08 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,26 @@ long long	ft_atoi(const char *str)
 		i++;
 	}
 	return (num * neg);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	char	*new;
+
+	new = malloc(size * nmemb);
+	if (!new)
+		return (NULL);
+	ft_bzero(new, nmemb * size);
+	return (new);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	char	*str;
+
+	str = s;
+	if (!s)
+		return ;
+	while (n--)
+		*(str++) = 0;
 }
