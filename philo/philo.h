@@ -6,12 +6,14 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/09 22:04:41 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/11 18:10:51 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
+# define TRUE 1
+# define FALSE 0
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -26,19 +28,22 @@ typedef struct	s_shared
 	int						ttd;
 	int						tte;
 	int						tts;
-	int						m_e;
+	int						total_meals;
+	int						all_done;
 	int						ph_dead;
 	long int				start_time;
 	struct s_philo			**ph;
 	pthread_mutex_t			write_m;
 	pthread_mutex_t			death_m;
-	pthread_t				death_id;
+	pthread_mutex_t			done_m;
 }				t_shared;
 
 typedef struct	s_philo
 {
 	pthread_t		t_id;
+	pthread_t		death_id;
 	int				id;
+	int				nb_eat;
 	long int		last_eat;
 	pthread_mutex_t	l_f;
 	pthread_mutex_t	*r_f;
@@ -48,7 +53,8 @@ typedef struct	s_philo
 void		*thread_fct(void *param);
 void		routine(t_philo *philo);
 void		*check_death(void *param);
-void		sleep_think(t_philo *ph);
+void		eat(t_philo *philo);
+void		sleep_think(t_philo *philo);
 long int	ms_timeofday(void);
 void		print_status(char *str, t_philo *philo);
 void		init_shared(t_shared *data, int ac, char **av);

@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:40:57 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/09 22:38:38 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/11 18:50:13 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,45 +17,44 @@ void	*thread_fct(void *param)
 	t_philo	*philo;
 
 	philo = param;
-	while (!philo->shared->ph_dead)
+	if (philo->id % 2 == 0)
+		usleep(philo->shared->tte * 1000);
+	while (philo->shared->ph_dead == FALSE)
 	{
-		pthread_create(&philo->shared->death_id, NULL, &check_death, philo);
+		if (philo->shared->total_meals != 0)
+		{
+			if (philo->shared->all_done == philo->shared->total_ph)
+			{
+				pthread_mutex_lock(&philo->shared->write_m);
+				if (philo->shared->ph_dead == FALSE)
+				{
+					printf("%ld ", ms_timeofday() - philo->shared->start_time);
+					printf("Everyone has eaten %d times, yay ! o/ \n", philo->shared->total_meals);
+					philo->shared->ph_dead = TRUE;
+				}
+				pthread_mutex_unlock(&philo->shared->write_m);
+				return (NULL);
+			}
+		}
+		pthread_create(&philo->death_id, NULL, &check_death, philo);
 		routine(philo);
-		pthread_detach(philo->shared->death_id);
+		pthread_detach(philo->death_id);
 	}
 	return (param);
 }
 
 void	routine(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
-		usleep(philo->shared->tte * 1000);
 	pthread_mutex_lock(&philo->l_f);
 	pthread_mutex_lock(&philo->shared->write_m);
 	print_status("has taken a fork", philo);
 	pthread_mutex_unlock(&philo->shared->write_m);
-
 	pthread_mutex_lock(philo->r_f);
 	pthread_mutex_lock(&philo->shared->write_m);
 	print_status("has taken a fork", philo);
 	pthread_mutex_unlock(&philo->shared->write_m);
-
-	pthread_mutex_lock(&philo->shared->write_m);
-	print_status("is eating", philo);
-	philo->last_eat = ms_timeofday();
-	pthread_mutex_unlock(&philo->shared->write_m);
-	usleep(philo->shared->tte * 1000);
-	pthread_mutex_unlock(philo->r_f);
-	pthread_mutex_unlock(&philo->l_f);
-
-	pthread_mutex_lock(&philo->shared->write_m);
-	print_status("is sleeping", philo);
-	pthread_mutex_unlock(&philo->shared->write_m);
-	usleep(philo->shared->tts * 1000);
-
-	pthread_mutex_lock(&philo->shared->write_m);
-	print_status("is thinking", philo);
-	pthread_mutex_unlock(&philo->shared->write_m);
+	eat(philo);
+	sleep_think(philo);
 	return ;
 }
 
@@ -64,14 +63,14 @@ void	*check_death(void *param)
 	t_philo *philo;
 
 	philo = param;
-	usleep(philo->shared->ttd);
+	usleep(philo->shared->ttd * 1000);
 	if ((ms_timeofday() - philo->last_eat) >= philo->shared->ttd)
 	{
 		pthread_mutex_lock(&philo->shared->death_m);
 		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("died", philo);
 		pthread_mutex_unlock(&philo->shared->write_m);
-		philo->shared->ph_dead = 1;
+		philo->shared->ph_dead = TRUE;
 		pthread_mutex_unlock(&philo->shared->death_m);
 		return (NULL);
 	}

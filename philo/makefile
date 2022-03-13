@@ -5,11 +5,12 @@ CFLAGS = -Wall -Wextra -Werror
 FLAGS = -pthread
 RM = rm -f
 
-FILES = philo \
-	     init \
-	     helpers \
-		 time_fcts \
-		free_fcts \
+FILES = 	philo \
+	     	init \
+	     	helpers \
+			routine \
+		 	time_fcts \
+			free_fcts \
 
 SRCS =	$(addsuffix .c, $(FILES))
 
