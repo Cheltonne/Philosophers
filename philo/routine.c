@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 19:27:31 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/11 18:11:54 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/13 15:50:03 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	eat(t_philo *philo)
 		if (philo->nb_eat == philo->shared->total_meals)
 		{
 			pthread_mutex_lock(&philo->shared->done_m);
-			philo->shared->all_done++;
+			philo->shared->done_eating++;
 			pthread_mutex_unlock(&philo->shared->done_m);
 		}
 		pthread_mutex_unlock(philo->r_f);

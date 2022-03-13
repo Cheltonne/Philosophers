@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:51:25 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/08 17:18:08 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/13 13:19:08 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,12 @@ void	ft_bzero(void *s, size_t n)
 		return ;
 	while (n--)
 		*(str++) = 0;
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	else
+		return (0);
 }

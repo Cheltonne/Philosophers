@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:40:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/11 18:11:07 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/13 15:51:54 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	init_shared(t_shared *data, int ac, char **av)
 		data->total_meals = ft_atoi(av[5]);
 	else
 		data->total_meals = 0;
-	data->all_done = 0;
+	data->done_eating = 0;
 	data->start_time = ms_timeofday();
 	data->ph_dead = FALSE;
 	pthread_mutex_init(&data->write_m, NULL);
