@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/13 15:52:11 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 17:09:29 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ typedef struct	s_philo
 
 void		*thread_fct(void *param);
 void		routine(t_philo *philo);
+void		*one_ph_fct(void *param);
 void		*check_death(void *param);
 void		eat(t_philo *philo);
 void		sleep_think(t_philo *philo);
 long int	ms_timeofday(void);
-void		smart_sleep(long int time, t_shared *shared);
+void		smart_sleep(long int time);
 void		print_status(char *str, t_philo *philo);
 void		init_shared(t_shared *data, int ac, char **av);
 long long	ft_atoi(const char *str);
@@ -67,5 +68,6 @@ void		init_ph(t_shared *data);
 void		add_philo(t_shared *data, t_philo *ret, int id);
 void		threads(t_shared *data);
 void		free_fct(t_shared * data);
+void		destroy_mutexes(t_shared *shared);
 
 #endif

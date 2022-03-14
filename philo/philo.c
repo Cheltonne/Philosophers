@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:40:57 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/13 15:54:39 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 17:10:49 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*thread_fct(void *param)
 
 	philo = param;
 	if (philo->id % 2 == 0)
-		smart_sleep(philo->shared->tte * 1000, philo->shared);
+		smart_sleep(philo->shared->tte);
 	while (philo->shared->ph_dead == FALSE)
 	{
 		if (philo->shared->total_meals != 0)
@@ -29,8 +29,7 @@ void	*thread_fct(void *param)
 				if (philo->shared->ph_dead == FALSE)
 				{
 					printf("%ld ", ms_timeofday() - philo->shared->start_time);
-					printf("Everyone has eaten %d times, yay ! o/ \n",
-							philo->shared->total_meals);
+					printf("Everyone has eaten %d times, yay ! o/ \n", philo->shared->total_meals);
 					philo->shared->ph_dead = TRUE;
 				}
 				pthread_mutex_unlock(&philo->shared->write_m);
@@ -56,7 +55,6 @@ void	routine(t_philo *philo)
 	pthread_mutex_unlock(&philo->shared->write_m);
 	eat(philo);
 	sleep_think(philo);
-	return ;
 }
 
 void	*check_death(void *param)
@@ -64,13 +62,13 @@ void	*check_death(void *param)
 	t_philo *philo;
 
 	philo = param;
-	smart_sleep(philo->shared->ttd * 1000, philo->shared);
+	smart_sleep(philo->shared->ttd);
 	if ((ms_timeofday() - philo->last_eat) >= philo->shared->ttd)
 	{
-		pthread_mutex_lock(&philo->shared->death_m);
 		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("died", philo);
 		pthread_mutex_unlock(&philo->shared->write_m);
+		pthread_mutex_lock(&philo->shared->death_m);
 		philo->shared->ph_dead = TRUE;
 		pthread_mutex_unlock(&philo->shared->death_m);
 		return (NULL);

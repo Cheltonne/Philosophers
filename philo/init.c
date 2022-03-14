@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:40:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/13 15:51:54 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 17:06:12 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,12 @@ void	threads(t_shared *data)
 	int i;
 
 	i = 0;
+	if (data->total_ph == 1)
+	{
+		pthread_create(&data->ph[i]->t_id, NULL, &one_ph_fct, data->ph[i]);
+		pthread_join(data->ph[i]->t_id, NULL);
+		return ;
+	}
 	while(i < data->total_ph)
 	{
 		pthread_create(&data->ph[i]->t_id, NULL, &thread_fct, data->ph[i]);

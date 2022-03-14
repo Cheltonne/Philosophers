@@ -6,21 +6,37 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 19:27:31 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/13 15:50:03 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 17:06:00 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	*one_ph_fct(void *param)
+{
+	t_philo *philo;
+
+	philo = param;
+
+	pthread_mutex_lock(&philo->l_f);
+	pthread_mutex_lock(&philo->shared->write_m);
+	print_status("has taken a fork", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
+	smart_sleep(philo->shared->ttd);
+	pthread_mutex_lock(&philo->shared->write_m);
+	print_status("died", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
+	pthread_mutex_unlock(&philo->l_f);
+	return (NULL);
+}
+
 void	eat(t_philo *philo)
 {
-	if (philo->shared->ph_dead == 0)
-	{
-		pthread_mutex_lock(&philo->shared->write_m);
 		philo->last_eat = ms_timeofday();
+		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("is eating", philo);
 		pthread_mutex_unlock(&philo->shared->write_m);
-		usleep(philo->shared->tte * 1000);
+		smart_sleep(philo->shared->tte);
 		philo->nb_eat++;
 		if (philo->nb_eat == philo->shared->total_meals)
 		{
@@ -30,7 +46,6 @@ void	eat(t_philo *philo)
 		}
 		pthread_mutex_unlock(philo->r_f);
 		pthread_mutex_unlock(&philo->l_f);
-	}
 }
 
 void	sleep_think(t_philo *philo)

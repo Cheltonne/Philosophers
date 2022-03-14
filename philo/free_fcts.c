@@ -6,11 +6,18 @@
 /*   By: chajax <chajax@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 18:52:37 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/08 18:56:23 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 17:10:46 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	destroy_mutexes(t_shared *shared)
+{
+	pthread_mutex_destroy(&shared->write_m);
+	pthread_mutex_destroy(&shared->death_m);
+	pthread_mutex_destroy(&shared->done_m);
+}
 
 void	free_fct(t_shared *data)
 {
@@ -23,4 +30,5 @@ void	free_fct(t_shared *data)
 		i++;
 	}
 	free(data->ph);
+	destroy_mutexes(data);
 }
