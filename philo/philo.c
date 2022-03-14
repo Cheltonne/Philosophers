@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:40:57 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/14 17:10:49 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 19:55:35 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ void	*thread_fct(void *param)
 			if (philo->shared->done_eating == philo->shared->total_ph)
 			{
 				pthread_mutex_lock(&philo->shared->write_m);
-				if (philo->shared->ph_dead == FALSE)
-				{
-					printf("%ld ", ms_timeofday() - philo->shared->start_time);
-					printf("Everyone has eaten %d times, yay ! o/ \n", philo->shared->total_meals);
-					philo->shared->ph_dead = TRUE;
-				}
+				printf("%ld ", ms_timeofday() - philo->shared->start_time);
+				printf("Everyone has eaten %d times, yay ! o/ \n", philo->shared->total_meals);
 				pthread_mutex_unlock(&philo->shared->write_m);
+				pthread_mutex_lock(&philo->shared->death_m);
+				philo->shared->ph_dead = TRUE;
+				pthread_mutex_unlock(&philo->shared->death_m);
 				return (NULL);
 			}
 		}
@@ -41,6 +40,28 @@ void	*thread_fct(void *param)
 		pthread_detach(philo->death_id);
 	}
 	return (param);
+}
+
+void	*check_death(void *param)
+{
+	t_philo *philo;
+
+	philo = param;
+	smart_sleep(philo->shared->ttd);
+	pthread_mutex_lock(&philo->eat_m);
+	if ((ms_timeofday() - philo->last_eat) >= philo->shared->ttd)
+	{
+		pthread_mutex_unlock(&philo->eat_m);
+		pthread_mutex_lock(&philo->shared->write_m);
+		print_status("died", philo);
+		pthread_mutex_unlock(&philo->shared->write_m);
+		pthread_mutex_lock(&philo->shared->death_m);
+		philo->shared->ph_dead = TRUE;
+		pthread_mutex_unlock(&philo->shared->death_m);
+		return (NULL);
+	}
+	pthread_mutex_unlock(&philo->eat_m);
+	return (NULL);	
 }
 
 void	routine(t_philo *philo)
@@ -55,25 +76,6 @@ void	routine(t_philo *philo)
 	pthread_mutex_unlock(&philo->shared->write_m);
 	eat(philo);
 	sleep_think(philo);
-}
-
-void	*check_death(void *param)
-{
-	t_philo *philo;
-
-	philo = param;
-	smart_sleep(philo->shared->ttd);
-	if ((ms_timeofday() - philo->last_eat) >= philo->shared->ttd)
-	{
-		pthread_mutex_lock(&philo->shared->write_m);
-		print_status("died", philo);
-		pthread_mutex_unlock(&philo->shared->write_m);
-		pthread_mutex_lock(&philo->shared->death_m);
-		philo->shared->ph_dead = TRUE;
-		pthread_mutex_unlock(&philo->shared->death_m);
-		return (NULL);
-	}
-	return (NULL);	
 }
 
 int	parsing(int ac, char **av)

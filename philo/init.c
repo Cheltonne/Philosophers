@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:40:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/14 17:06:12 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 18:23:18 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	add_philo(t_shared *data, t_philo *ret, int id)
 	ret->id = id;
 	ret->last_eat = data->start_time;
 	ret->nb_eat = 0;
+	pthread_mutex_init(&ret->eat_m, NULL);
 	pthread_mutex_init(&ret->l_f, NULL);
 	if (id == data->total_ph)
 		ret->r_f = &data->ph[0]->l_f;

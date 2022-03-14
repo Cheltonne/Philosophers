@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/14 17:09:29 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 18:22:58 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_philo
 	long int		last_eat;
 	pthread_mutex_t	l_f;
 	pthread_mutex_t	*r_f;
+	pthread_mutex_t	eat_m;
 	t_shared		*shared;
 }				t_philo;
 

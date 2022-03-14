@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 18:41:51 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/14 15:40:47 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/14 19:53:19 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,18 @@ void	print_status(char *str, t_philo *philo)
 	long int	timestamp;
 
 	timestamp = ms_timeofday() - philo->shared->start_time;
+	pthread_mutex_lock(&philo->shared->death_m);
+	pthread_mutex_lock(&philo->shared->done_m);
 	if (philo->shared->ph_dead == 0 && philo->shared->done_eating
 			!= philo->shared->total_ph)
+	{
+		pthread_mutex_unlock(&philo->shared->death_m);
+		pthread_mutex_unlock(&philo->shared->done_m);
 		printf("%ld %d %s\n", timestamp, philo->id, str);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->shared->death_m);
+		pthread_mutex_unlock(&philo->shared->done_m);
+	}
 }
