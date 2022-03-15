@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/14 18:22:58 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/15 23:22:03 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void		*check_death(void *param);
 void		eat(t_philo *philo);
 void		sleep_think(t_philo *philo);
 long int	ms_timeofday(void);
-void		smart_sleep(long int time);
+void		smart_sleep(long int time, t_philo *philo);
 void		print_status(char *str, t_philo *philo);
 void		init_shared(t_shared *data, int ac, char **av);
 long long	ft_atoi(const char *str);
@@ -70,5 +70,6 @@ void		add_philo(t_shared *data, t_philo *ret, int id);
 void		threads(t_shared *data);
 void		free_fct(t_shared * data);
 void		destroy_mutexes(t_shared *shared);
+int			ph_is_dead(t_philo *philo);
 
 #endif
