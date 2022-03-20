@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <limits.h>
 
 typedef struct	s_shared
 {
@@ -71,5 +72,6 @@ void		threads(t_shared *data);
 void		free_fct(t_shared * data);
 void		destroy_mutexes(t_shared *shared);
 int			ph_is_dead(t_philo *philo);
+size_t		ft_strlen(const char *str);
 
 #endif

@@ -48,8 +48,10 @@ void	*thread_fct(void *param)
 				pthread_mutex_lock(&philo->shared->death_m);
 				philo->shared->ph_dead = TRUE;
 				pthread_mutex_unlock(&philo->shared->death_m);
+				pthread_mutex_lock(&philo->shared->write_m);
 				printf("%ld ", ms_timeofday() - philo->shared->start_time);
 				printf("Everyone has eaten %d times, yay ! o/ \n", philo->shared->total_meals);
+				pthread_mutex_unlock(&philo->shared->write_m);
 				return (NULL);
 			}
 			pthread_mutex_unlock(&philo->shared->done_m);
@@ -68,7 +70,9 @@ void	*check_death(void *param)
 	if ((ms_timeofday() - philo->last_eat) >= philo->shared->ttd)
 	{
 		pthread_mutex_unlock(&philo->eat_m);
+		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("died", philo);
+		pthread_mutex_unlock(&philo->shared->write_m);
 		pthread_mutex_lock(&philo->shared->death_m);
 		philo->shared->ph_dead = TRUE;
 		pthread_mutex_unlock(&philo->shared->death_m);
@@ -83,27 +87,36 @@ void	*check_death(void *param)
 void	routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->l_f);
+	pthread_mutex_lock(&philo->shared->write_m);
 	print_status("has taken a fork", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
 	pthread_mutex_lock(philo->r_f);
+	pthread_mutex_lock(&philo->shared->write_m);
 	print_status("has taken a fork", philo);
+	pthread_mutex_unlock(&philo->shared->write_m);
 	eat(philo);
-	pthread_mutex_unlock(philo->r_f);
 	pthread_mutex_unlock(&philo->l_f);
+	pthread_mutex_unlock(philo->r_f);
 	sleep_think(philo);
 }
 
 int	parsing(int ac, char **av)
 {
 	int	i;
-	int j;
+	size_t j;
 
 	i = 1;
 	while (i < ac)
 	{
 		j = 0;
-		if (ft_isdigit(av[i][j]))
-			j++;
-		else
+		while (j < ft_strlen(av[i]))
+		{
+			if (ft_isdigit(av[i][j]))
+				j++;
+			else
+				return (0);
+		}
+		if (ft_atoi(av[i]) < 0 || ft_atoi(av[i]) > INT_MAX)
 			return (0);
 		i++;
 	}
@@ -126,5 +139,7 @@ int	main(int ac, char **av)
 		free(data);
 		return (1);
 	}
-	printf("This program should take 4 or 5 arguments, and all should be numeric values.\n");
+	printf("This program should take 4 or 5 arguments, and all should be");
+	printf(" positive INT type values. Thank you for your patience.\n");
+	return (0);
 }

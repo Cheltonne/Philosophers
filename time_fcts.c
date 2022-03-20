@@ -32,14 +32,9 @@ void	smart_sleep(long int time, t_philo *philo)
 	start_time = ms_timeofday();
 	while ((ms_timeofday() - start_time) < time)
 	{
-		pthread_mutex_lock(&philo->shared->death_m);
-		if (philo->shared->ph_dead == TRUE)
-		{
-			pthread_mutex_unlock(&philo->shared->death_m);
+		if (ph_is_dead(philo) == TRUE)
 			break ;
-		}
-		pthread_mutex_unlock(&philo->shared->death_m);
-		usleep(time / 10);
+		usleep(50);
 	}
 }
 
@@ -48,16 +43,6 @@ void	print_status(char *str, t_philo *philo)
 	long int	timestamp;
 
 	timestamp = ms_timeofday() - philo->shared->start_time;
-	pthread_mutex_lock(&philo->shared->done_m);
-	if (ph_is_dead(philo) == FALSE && philo->shared->done_eating
-			!= philo->shared->total_ph)
-	{
-		pthread_mutex_unlock(&philo->shared->done_m);
+	if (ph_is_dead(philo) == FALSE)
 		printf("%ld %d %s\n", timestamp, philo->id, str);
-	}
-	else
-	{
-		pthread_mutex_unlock(&philo->shared->death_m);
-		pthread_mutex_unlock(&philo->shared->done_m);
-	}
 }

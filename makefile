@@ -1,8 +1,8 @@
 NAME = philo
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
-FLAGS = -pthread
+CFLAGS = -Wall -Wextra -Werror
+FLAGS = -pthread -g -fsanitize=thread
 RM = rm -f
 
 FILES = 	philo \

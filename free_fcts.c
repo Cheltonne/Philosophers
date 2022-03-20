@@ -21,6 +21,7 @@ void	destroy_mutexes(t_shared *shared)
 
 void	free_fct(t_shared *data)
 {
+	destroy_mutexes(data);
 	int i;
 
 	i = 0;
@@ -30,5 +31,4 @@ void	free_fct(t_shared *data)
 		i++;
 	}
 	free(data->ph);
-	destroy_mutexes(data);
 }

@@ -35,25 +35,35 @@ void	eat(t_philo *philo)
 		pthread_mutex_lock(&philo->eat_m);
 		philo->last_eat = ms_timeofday();
 		pthread_mutex_unlock(&philo->eat_m);
+		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("is eating", philo);
+		pthread_mutex_unlock(&philo->shared->write_m);
 		smart_sleep(philo->shared->tte, philo);
+		pthread_mutex_lock(&philo->eat_m);
 		philo->nb_eat++;
+		pthread_mutex_unlock(&philo->eat_m);
+		pthread_mutex_lock(&philo->eat_m);
 		if (philo->nb_eat == philo->shared->total_meals)
 		{
+			pthread_mutex_unlock(&philo->eat_m);
 			pthread_mutex_lock(&philo->shared->done_m);
 			philo->shared->done_eating++;
 			pthread_mutex_unlock(&philo->shared->done_m);
 		}
+		pthread_mutex_unlock(&philo->eat_m);
 }
 
 void	sleep_think(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->shared->death_m);
-	if (philo->shared->ph_dead == 0)
+	if (ph_is_dead(philo) == FALSE)
 	{
-		pthread_mutex_unlock(&philo->shared->death_m);
+		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("is sleeping", philo);
+		pthread_mutex_unlock(&philo->shared->write_m);
 		smart_sleep(philo->shared->tts, philo);
+		pthread_mutex_lock(&philo->shared->write_m);
 		print_status("is thinking", philo);
+		pthread_mutex_unlock(&philo->shared->write_m);
 	}
+	pthread_mutex_unlock(&philo->shared->death_m);
 }
