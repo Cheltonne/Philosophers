@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 16:40:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/15 22:53:02 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/20 17:10:05 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	init_ph(t_shared *data)
 		i++;
 	}
 	i = 0;
-	while(i < data->total_ph)
+	while (i < data->total_ph)
 	{
 		add_philo(data, data->ph[i], i + 1);
 		i++;
@@ -70,7 +70,7 @@ void	init_shared(t_shared *data, int ac, char **av)
 
 void	threads(t_shared *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (data->total_ph == 1)

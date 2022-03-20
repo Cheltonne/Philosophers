@@ -6,7 +6,7 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:41:46 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/15 23:22:03 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/20 17:56:24 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <pthread.h>
 # include <limits.h>
 
-typedef struct	s_shared
+typedef struct s_shared
 {
 	char					**av;
 	int						ac;
@@ -39,7 +39,7 @@ typedef struct	s_shared
 	pthread_mutex_t			done_m;
 }				t_shared;
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	pthread_t		t_id;
 	pthread_t		death_id;
@@ -56,12 +56,15 @@ void		*thread_fct(void *param);
 void		routine(t_philo *philo);
 void		*one_ph_fct(void *param);
 void		*check_death(void *param);
+void		all_meals_done(t_philo *philo);
 void		eat(t_philo *philo);
 void		sleep_think(t_philo *philo);
 long int	ms_timeofday(void);
 void		smart_sleep(long int time, t_philo *philo);
 void		print_status(char *str, t_philo *philo);
 void		init_shared(t_shared *data, int ac, char **av);
+void		ft_putchar_fd(char c, int fd);
+void		ft_putstr_fd(char *s, int fd);
 long long	ft_atoi(const char *str);
 void		*ft_calloc(size_t nmemb, size_t size);
 void		ft_bzero(void *s, size_t n);
@@ -69,7 +72,7 @@ int			ft_isdigit(int c);
 void		init_ph(t_shared *data);
 void		add_philo(t_shared *data, t_philo *ret, int id);
 void		threads(t_shared *data);
-void		free_fct(t_shared * data);
+void		free_fct(t_shared *data);
 void		destroy_mutexes(t_shared *shared);
 int			ph_is_dead(t_philo *philo);
 size_t		ft_strlen(const char *str);

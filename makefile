@@ -2,15 +2,17 @@ NAME = philo
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-FLAGS = -pthread -g -fsanitize=thread
+FLAGS = -pthread
 RM = rm -f
 
 FILES = 	philo \
 	     	init \
 	     	helpers \
+	     	helpers2 \
 			routine \
 		 	time_fcts \
 			free_fcts \
+			check_end_conditions \
 
 SRCS =	$(addsuffix .c, $(FILES))
 

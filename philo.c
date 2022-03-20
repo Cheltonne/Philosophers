@@ -6,26 +6,11 @@
 /*   By: chajax <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:40:57 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/15 23:18:22 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/20 17:58:26 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	ph_is_dead(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->shared->death_m);
-	if (philo->shared->ph_dead == TRUE)
-	{
-		pthread_mutex_unlock(&philo->shared->death_m);
-		return (TRUE);
-	}
-	else
-	{
-		pthread_mutex_unlock(&philo->shared->death_m);
-		return (FALSE);
-	}
-}
 
 void	*thread_fct(void *param)
 {
@@ -40,48 +25,9 @@ void	*thread_fct(void *param)
 		routine(philo);
 		pthread_detach(philo->death_id);
 		if (philo->shared->total_meals != 0)
-		{
-			pthread_mutex_lock(&philo->shared->done_m);
-			if (philo->shared->done_eating == philo->shared->total_ph)
-			{
-				pthread_mutex_unlock(&philo->shared->done_m);
-				pthread_mutex_lock(&philo->shared->death_m);
-				philo->shared->ph_dead = TRUE;
-				pthread_mutex_unlock(&philo->shared->death_m);
-				pthread_mutex_lock(&philo->shared->write_m);
-				printf("%ld ", ms_timeofday() - philo->shared->start_time);
-				printf("Everyone has eaten %d times, yay ! o/ \n", philo->shared->total_meals);
-				pthread_mutex_unlock(&philo->shared->write_m);
-				return (NULL);
-			}
-			pthread_mutex_unlock(&philo->shared->done_m);
-		}
+			all_meals_done(philo);
 	}
 	return (param);
-}
-
-void	*check_death(void *param)
-{
-	t_philo *philo;
-
-	philo = param;
-	smart_sleep(philo->shared->ttd, philo);
-	pthread_mutex_lock(&philo->eat_m);
-	if ((ms_timeofday() - philo->last_eat) >= philo->shared->ttd)
-	{
-		pthread_mutex_unlock(&philo->eat_m);
-		pthread_mutex_lock(&philo->shared->write_m);
-		print_status("died", philo);
-		pthread_mutex_unlock(&philo->shared->write_m);
-		pthread_mutex_lock(&philo->shared->death_m);
-		philo->shared->ph_dead = TRUE;
-		pthread_mutex_unlock(&philo->shared->death_m);
-		pthread_mutex_unlock(philo->r_f);
-		pthread_mutex_unlock(&philo->l_f);
-		return (NULL);
-	}
-	pthread_mutex_unlock(&philo->eat_m);
-	return (NULL);	
 }
 
 void	routine(t_philo *philo)
@@ -95,15 +41,15 @@ void	routine(t_philo *philo)
 	print_status("has taken a fork", philo);
 	pthread_mutex_unlock(&philo->shared->write_m);
 	eat(philo);
-	pthread_mutex_unlock(&philo->l_f);
 	pthread_mutex_unlock(philo->r_f);
+	pthread_mutex_unlock(&philo->l_f);
 	sleep_think(philo);
 }
 
 int	parsing(int ac, char **av)
 {
-	int	i;
-	size_t j;
+	int		i;
+	size_t	j;
 
 	i = 1;
 	while (i < ac)
@@ -116,7 +62,7 @@ int	parsing(int ac, char **av)
 			else
 				return (0);
 		}
-		if (ft_atoi(av[i]) < 0 || ft_atoi(av[i]) > INT_MAX)
+		if (ft_atoi(av[i]) < 1 || ft_atoi(av[i]) > INT_MAX)
 			return (0);
 		i++;
 	}
@@ -137,9 +83,11 @@ int	main(int ac, char **av)
 		threads(data);
 		free_fct(data);
 		free(data);
-		return (1);
+		return (0);
 	}
-	printf("This program should take 4 or 5 arguments, and all should be");
-	printf(" positive INT type values. Thank you for your patience.\n");
-	return (0);
+	ft_putstr_fd(
+		"This program should take 4 or 5 arguments, and all should be", 2);
+	ft_putstr_fd(
+		" positive INT type values =! 0. Thank you for your patience.\n", 2);
+	return (1);
 }

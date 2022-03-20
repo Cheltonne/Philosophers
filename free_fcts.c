@@ -6,7 +6,7 @@
 /*   By: chajax <chajax@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/08 18:52:37 by chajax            #+#    #+#             */
-/*   Updated: 2022/03/14 17:10:46 by chajax           ###   ########.fr       */
+/*   Updated: 2022/03/20 17:09:11 by chajax           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	destroy_mutexes(t_shared *shared)
 
 void	free_fct(t_shared *data)
 {
-	destroy_mutexes(data);
-	int i;
+	int	i;
 
 	i = 0;
+	destroy_mutexes(data);
 	while (i < data->total_ph + 1)
 	{
 		free(data->ph[i]);
