@@ -43,3 +43,4 @@ To run the program, compile it using the provided `Makefile` and execute it with
 
 This project serves as an introduction to concurrent programming, demonstrating how to manage threads and shared resources efficiently while adhering to strict rules of synchronization.
 
+![Philosophers project grade 100/100](https://github.com/Cheltonne/Cheltonne/blob/main/philo_grade.png)
