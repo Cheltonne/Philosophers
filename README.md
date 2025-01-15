@@ -35,5 +35,11 @@ In this simulation:
 - Employs mutexes to manage fork states and avoid race conditions.
 - Handles scenarios with varying numbers of philosophers, including edge cases like a single philosopher.
 
+### How to Use
+To run the program, compile it using the provided `Makefile` and execute it with the following arguments:  
+```bash
+./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] 
+```
+
 This project serves as an introduction to concurrent programming, demonstrating how to manage threads and shared resources efficiently while adhering to strict rules of synchronization.
 
